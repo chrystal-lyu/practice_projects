@@ -1,35 +1,78 @@
-document.addEventListener("DOMContentLoaded",
-    function (event) {
+$(document).ready(function(){
+    $('#submit').click(function(){
 
-        function searchWeather (event) {
-            var city =
-                document.getElementById("city").value;
-            var message = "<h2>Hello " + city + "!</h2>";
+        var cityName=$('#input').val();
+        var weatherURL="http://api.openweathermap.org/data/2.5/weather?q="+cityName+"&units=metric&appid=002799f99fa53882427e9e9d7c017a17";
+        console.log(weatherURL);
 
-            document
-                .getElementById("resultArea")
-                .innerHTML = message;
+        $.ajax({
+            url:weatherURL,
+            success:function(result){
+                console.log(result);
 
-            if (city === "London"|| city === "london") {
-                        $.getJSON("http://api.openweathermap.org/data/2.5/weather?q=London,uk&appid=002799f99fa53882427e9e9d7c017a17", function(result){
-                            var displayDeg = result.wind.deg;
-                            $("#resultArea").append("Current Temperature is: " + JSON.stringify(displayDeg) + " F" + " <br> ");
-                            var displaySpeed = result.wind.speed;
-                            $("#resultArea").append("Wind Speed: " + JSON.stringify(displaySpeed) + " mph" + " <br> ");
+                var html;
+                var type = $('#select').val();
+                var label = $('#select option:selected').text();
 
+                switch(type) {
+                    case 'main':
+
+                        var main = result.main;
+                        html =
+                            ' <ul>' +
+                            ' <li><b>Temperature:</b> ' + main.temp + ' Celsius' + ' <em>(min: ' + main.temp_min + ', max: ' + main.temp_max + ')</em></li>' +
+                            ' <li><b>Presure:</b> ' + main.pressure + ' <em>(humidity: ' + main.humidity + '%' + ')</em></li>' +
+                            ' </ul>';
+                        break;
+                    case 'weather':
+                        html = " <ul>";
+                        $.each(result.weather, function(key, weather) {
+                            html +=
+                                ' <li><img class="weather-icon" src="http://openweathermap.org/img/w/' + weather.icon + '.png" /><b>' + weather.main + '</b></li>' + '<li><b>Description:</b>' + weather.description + '</li>';
                         });
+                        html += " </ul>";
+                        break;
 
-            } else {
-                var errorMessage = "Sorry, the city '" + city + "' does not exist."
-                document
-                    .getElementById("resultArea")
-                    .innerHTML = errorMessage
+                    case 'wind':
+                        var wind = result.wind;
+                        html =
+                            ' <ul>' +
+                            ' <li><b>Degrees:</b> ' + wind.deg + '</li>' +
+                            ' <li><b>Speed:</b> ' + wind.speed + '</li>' +
+                            ' </ul>';
+                        break;
+
+                    case 'sys':
+                        var sys = result.sys;
+                        html =
+                            ' <ul>' +
+                            ' <li><b>Country:</b> ' + sys.country + '</li>' +
+                            ' <li><b>Sunset:</b> ' + sys.sunset + '</li>' +
+                            ' <li><b>Sunrise:</b> ' + sys.sunrise + '</li>' +
+                            ' </ul>';
+                        break;
+
+                    case 'coord':
+                        var coord = result.coord;
+                        html =
+                            ' <ul>' +
+                            ' <li><b>Longitude:</b> ' + coord.lon + '</li>' +
+                            ' <li><b>Latitude:</b> ' + coord.lat + '</li>' +
+
+                            ' </ul>';
+                        break;
+
+                    default:return;}
+
+                $('#content').append(
+                    '<article class="weather">' +
+                    ' <h2>' + result.name + ' <em>(' + label + ')</em></h2>' +
+                    ' <div class="weather-main">' +
+                    html +
+                    ' </div>' +
+                    '</article>'
+                );
             }
-        }
-
-        // Unobtrusive event binding
-        document.querySelector("button")
-            .addEventListener("click", searchWeather);
-
-    }
-);
+        })
+    })
+});
