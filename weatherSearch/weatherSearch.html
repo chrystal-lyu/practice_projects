@@ -1,28 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="UTF-8">
-    <title>Weather Search!</title>
-    <link rel="stylesheet" href="numberReportHome.css">
-    <h1>Search for London's Weather</h1>
+    <title>Weather</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="js/jquery-1.11.3.min.js" ></script>
+    <script src="test1103.js" ></script>
+
 </head>
 <body>
-    <div class="input">
-        <input id="city" type="text">
-        <button>
-            Search
-        </button>
-    </div>
 
-    <div id = "resultArea"> </div>
+<div class="header">
 
-    <!--<input type="text" name="username" id="username">-->
-    <!--<div id="resultarea"></div>-->
+    <a class="button" href="test1103.html">Home</a>
+    <select id = "select">
+        <option style="color:gray" value="null">------select one option-------</option>
 
-    <script src="js/jquery-1.11.3.min.js"></script>
-    <script src="weatherSearch.js"></script>
+        <option value="main" selected="selected">Main - TEMP and Pressure</option>
+        <option value="weather">Weather - Main and Description</option>
+        <option value="wind">Wind - Deg and Speed</option>
+        <option value="sys">Sys - country, sunrise and sunset</option>
+        <option value="coord">Coordinates - longitude and latitude</option>
+
+    </select>
+
+    <input type="text" id="input">
+    <button type="button" id="submit">Search!</button>
+</div>
+
+<div id="content" class="weather-list">
+    <!--content-->
+    Hello This is a Test
+</div>
 
 </body>
 </html>
